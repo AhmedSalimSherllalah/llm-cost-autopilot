@@ -24,14 +24,10 @@ def calculate_complexity(prompt: str):
     return score
 
 
-def select_model (prompt :str): 
+def select_model(prompt: str):
     score = calculate_complexity(prompt)
-    
-    if score >=3: 
-        return "powerful_model"
-    
-    return "cheap model" 
 
+    if score >= 3:
+        return "gpt-6.1-sol"
 
-print(select_model("What is the capital of France?"))
-print(select_model("Compare these algorithms and explain which is better"))
+    return "gpt-6-luna"

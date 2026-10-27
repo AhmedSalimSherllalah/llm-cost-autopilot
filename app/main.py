@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from app.router import calculate_complexity, select_model
+from app.llm import generate_response
+
+from app.cost import calculate_cost
+
 
 app = FastAPI(title="LLM Cost Autopilot")
 
@@ -23,9 +27,20 @@ def route_prompt(request: PromptRequest):
     score = calculate_complexity(request.prompt)
     model = select_model(request.prompt)
 
+    result = generate_response(request.prompt, model)
+
+    cost = calculate_cost(
+        model,
+        result["input_tokens"],
+        result["output_tokens"]
+    )
 
     return {
-        "prompt" : request.prompt,
+        "prompt": request.prompt,
         "complexity_score": score,
-        "selected_model": model
+        "selected_model": model,
+        "response": result["text"],
+        "input_tokens": result["input_tokens"],
+        "output_tokens": result["output_tokens"],
+        "cost_usd": cost
     }
