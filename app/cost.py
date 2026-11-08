@@ -17,3 +17,14 @@ def calculate_cost(model: str, input_tokens: int, output_tokens: int):
     output_cost = (output_tokens / 1_000_000) * prices["output"]
 
     return input_cost + output_cost
+
+def calculate_savings(model: str, input_tokens: int, output_tokens: int):
+    actual_cost = calculate_cost(model, input_tokens, output_tokens)
+
+    expensive_cost = calculate_cost(
+        "gpt-6.1-sol",
+        input_tokens,
+        output_tokens
+    )
+
+    return expensive_cost - actual_cost

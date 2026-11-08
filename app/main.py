@@ -6,8 +6,15 @@ from app.llm import generate_response
 
 from app.cost import calculate_cost
 
+from app.database import create_database, save_request, get_stats
+
+
+
+
 
 app = FastAPI(title="LLM Cost Autopilot")
+
+create_database()
 
 class PromptRequest(BaseModel):
     prompt: str
@@ -21,6 +28,10 @@ def home():
 def health():
     return {"status": "healthy"}
 
+@app.get("/stats")
+def stats():
+    return get_stats()
+
 
 @app.post("/route")
 def route_prompt(request: PromptRequest):
@@ -33,6 +44,14 @@ def route_prompt(request: PromptRequest):
         model,
         result["input_tokens"],
         result["output_tokens"]
+    )
+    save_request(
+        request.prompt,
+        score,
+        model,
+        result["input_tokens"],
+        result["output_tokens"],
+        cost
     )
 
     return {
