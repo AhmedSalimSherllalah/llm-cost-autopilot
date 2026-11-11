@@ -1,18 +1,14 @@
+
 def calculate_complexity(prompt: str):
     score = 0
+    prompt_lower = prompt.lower()
 
     complex_keywords = [
-        "analyse",
-        "analyze",
-        "compare",
-        "explain",
-        "evaluate",
-        "debug",
-        "algorithm",
-        "reason"
+        "analyse", "analyze", "compare", "explain",
+        "evaluate", "debug", "algorithm", "reason",
+        "design", "prove", "scalable", "distributed",
+        "fault-tolerant", "optimize", "architecture"
     ]
-
-    prompt_lower = prompt.lower()
 
     if len(prompt) > 200:
         score += 1
@@ -24,10 +20,11 @@ def calculate_complexity(prompt: str):
     return score
 
 
+
 def select_model(prompt: str):
     score = calculate_complexity(prompt)
 
-    if score >= 3:
+    if score >= 2:
         return "gpt-6.1-sol"
 
     return "gpt-6-luna"
